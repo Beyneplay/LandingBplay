@@ -27,6 +27,7 @@ const iconPaths = {
   star: '<path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"/>',
   trend: '<path d="M3 17 9 11l4 4 8-8"/><path d="M14 7h7v7"/>',
   users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8"/>',
   whatsapp: '<path d="M4.2 19.8 5.5 16A8 8 0 1 1 8 18.4l-3.8 1.4Z"/><path d="M9 8.8c.2 3 2.3 5.1 5.2 5.9l1.1-1.1c.3-.3.7-.4 1.1-.2l1.3.6"/>'
 };
 
@@ -37,9 +38,9 @@ const renderCopy = (item) => item.mobileDescription
   : item.description;
 
 const contactLabel = {
-  telegram: { title: "Telegram", fallback: "Контакт будет добавлен", icon: "send" },
-  whatsapp: { title: "WhatsApp", fallback: "Контакт будет добавлен", icon: "whatsapp" },
-  email: { title: "Email", fallback: "Контакт будет добавлен", icon: "mail" }
+  instagram: { title: "Instagram", display: "@beyneplay", icon: "instagram" },
+  whatsapp: { title: "WhatsApp", display: "+7 776 010 0996", icon: "whatsapp" },
+  email: { title: "Email", display: "info@beyneplay.com", icon: "mail" }
 };
 
 function contactHref(type) {
@@ -155,13 +156,12 @@ function renderContacts() {
     const value = CONTACTS[type] || meta.fallback;
     const disabled = CONTACTS[type] ? "" : " is-disabled";
     return `
-      <a class="contact-card contact-link${disabled}" data-contact="${type}" href="${contactHref(type)}" aria-label="${meta.title}: ${value}">
+      <a class="contact-card contact-link${disabled}" data-contact="${type}" href="${contactHref(type)}" aria-label="${meta.title}: ${meta.display || value}">
         <span class="contact-card__icon">${renderIcon(meta.icon)}</span>
         <span>
           <h3>${meta.title}</h3>
-          <p>${value}</p>
+          <p>${meta.display || value}</p>
         </span>
-        <span class="contact-card__arrow" aria-hidden="true">→</span>
       </a>
     `;
   }).join("");
@@ -270,6 +270,45 @@ function setupReveal() {
   items.forEach((item) => observer.observe(item));
 }
 
+function setupIntro() {
+  const hero = document.querySelector(".hero");
+  const video = document.querySelector("[data-hero-bg]");
+  if (!hero || !video) {
+    hero?.classList.add("is-ready");
+    return;
+  }
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobile = window.matchMedia("(max-width: 767px)").matches;
+  let finished = false;
+
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    hero.classList.add("is-ready");
+    window.setTimeout(() => {
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    }, mobile ? 0 : 3000);
+  };
+
+  if (reduce || mobile) {
+    finish();
+    return;
+  }
+
+  video.preload = "auto";
+  video.addEventListener("ended", finish, { once: true });
+  video.addEventListener("error", finish, { once: true });
+  video.addEventListener("timeupdate", () => {
+    if (finished || !video.duration) return;
+    if (video.currentTime >= video.duration - 2.8) finish();
+  });
+  video.addEventListener("click", finish, { once: true });
+  video.play().catch(finish);
+}
+
 function setupHeroParallax() {
   const visual = document.querySelector(".hero__visual img");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -281,6 +320,55 @@ function setupHeroParallax() {
     const x = (event.clientX - rect.left) / rect.width - .5;
     const y = (event.clientY - rect.top) / rect.height - .5;
     visual.style.transform = `translate(${8 + x * 8}px, ${20 + y * 8}px) rotate(${x * .35}deg)`;
+  });
+}
+
+function setupCallbackModal() {
+  const modal = document.querySelector("[data-callback-modal]");
+  const form = document.querySelector("[data-callback-form]");
+  const success = document.querySelector("[data-callback-success]");
+  const openers = [...document.querySelectorAll("[data-callback-open]")];
+  const closers = [...document.querySelectorAll("[data-callback-close]")];
+  if (!modal || !form) return;
+
+  const video = modal.querySelector("[data-callback-video]");
+  let lastFocus = null;
+
+  const setOpen = (open) => {
+    modal.hidden = !open;
+    document.body.classList.toggle("modal-open", open);
+    if (open) {
+      lastFocus = document.activeElement;
+      form.hidden = false;
+      success.hidden = true;
+      form.reset();
+      form.querySelector("input")?.focus();
+      video?.play?.().catch(() => {});
+      return;
+    }
+    video?.pause?.();
+    lastFocus?.focus?.();
+  };
+
+  openers.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      setOpen(true);
+    });
+  });
+  closers.forEach((node) => node.addEventListener("click", () => setOpen(false)));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !modal.hidden) setOpen(false);
+  });
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const payload = Object.fromEntries(new FormData(form).entries());
+    window.dispatchEvent(new CustomEvent("landing:analytics", {
+      detail: { event: "callback_submit", login: payload.login }
+    }));
+    form.hidden = true;
+    success.hidden = false;
+    success.querySelector("button")?.focus();
   });
 }
 
@@ -308,9 +396,11 @@ function render() {
 }
 
 render();
+setupIntro();
 setupFaq();
 setupHeader();
 setupMobileMenu();
 setupReveal();
 setupHeroParallax();
 setupDisabledContacts();
+setupCallbackModal();

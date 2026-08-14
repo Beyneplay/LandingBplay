@@ -1,7 +1,7 @@
 export const CONTACTS = {
-  telegram: "",
-  whatsapp: "",
-  email: ""
+  instagram: "https://www.instagram.com/beyneplay/",
+  whatsapp: "https://wa.me/77760100996",
+  email: "info@beyneplay.com"
 };
 
 export const heroFacts = [
@@ -150,6 +150,6 @@ export const faq = [
   },
   {
     question: "Как связаться с командой?",
-    answer: "Через Telegram, WhatsApp или Email. На лендинге контакты должны быть доступны без формы — одним кликом из header, партнёрского блока, FAQ и финального CTA."
+    answer: "Через Instagram, WhatsApp или Email: instagram.com/beyneplay, +7 776 010 0996 и info@beyneplay.com."
   }
 ];
