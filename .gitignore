@@ -1,4 +1,9 @@
 .DS_Store
 node_modules/
+
+# Secrets — never commit
 .env
 .env.*
+!.env.example
+landing.env
+**/landing.env

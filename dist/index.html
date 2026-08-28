@@ -4,34 +4,59 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#08090a" />
+    <title>BeynePlay — Short stories. Endless worlds.</title>
     <meta
       name="description"
-      content="BeynePlay объединяет локальный контент, технологическую платформу, дистрибуцию, аналитику и монетизацию вокруг коротких сериалов."
+      content="Короткие сериалы из Казахстана: эпизоды по 1–2 минуты, десятки серий и истории, ради которых хочется свайпнуть ещё раз. Безопасно. Без рекламы. Твоё."
     />
-    <meta property="og:title" content="BeynePlay — платформа коротких сериалов из Казахстана" />
+    <link rel="canonical" href="https://beyneplay.kz/" />
+
+    <meta property="og:site_name" content="BeynePlay" />
+    <meta property="og:locale" content="ru_KZ" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://beyneplay.kz/" />
+    <meta property="og:title" content="BeynePlay — Short stories. Endless worlds." />
     <meta
       property="og:description"
-      content="Локальные истории. Mobile-first формат. Система для создания, проверки спроса и масштабирования контента."
+      content="Короткие сериалы из Казахстана: эпизоды по 1–2 минуты, десятки серий и истории, ради которых хочется свайпнуть ещё раз. Безопасно. Без рекламы. Твоё."
     />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="/public/assets/hero-phones.png" />
-    <title>BeynePlay — платформа коротких сериалов из Казахстана</title>
+    <meta property="og:image" content="https://beyneplay.kz/public/assets/og-image.jpg" />
+    <meta property="og:image:secure_url" content="https://beyneplay.kz/public/assets/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="537" />
+    <meta property="og:image:alt" content="BeynePlay — Short stories. Endless worlds." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BeynePlay — Short stories. Endless worlds." />
+    <meta
+      name="twitter:description"
+      content="Короткие сериалы из Казахстана: эпизоды по 1–2 минуты, десятки серий и истории, ради которых хочется свайпнуть ещё раз. Безопасно. Без рекламы. Твоё."
+    />
+    <meta name="twitter:image" content="https://beyneplay.kz/public/assets/og-image.jpg" />
+    <meta name="twitter:image:alt" content="BeynePlay — Short stories. Endless worlds." />
+
+    <link rel="icon" href="/public/assets/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/public/assets/favicon-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/public/assets/favicon-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/public/assets/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/public/assets/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/public/assets/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="preload" as="image" href="/public/assets/beyneplay-logo.svg" />
     <link rel="preload" as="image" href="/public/assets/hero-phones.png" />
     <link rel="stylesheet" href="/src/styles.css" />
   </head>
   <body>
     <header class="site-header" data-header>
       <a class="brand" href="#top" aria-label="BeynePlay, к началу страницы">
-        <img src="/public/assets/beyneplay-logo.png" width="196" height="51" alt="BeynePlay" />
+        <img src="/public/assets/beyneplay-logo.svg" width="196" height="84" alt="BeynePlay" />
       </a>
       <nav class="desktop-nav" aria-label="Основная навигация">
         <a href="#about">О проекте</a>
-        <a href="#why-now">Почему сейчас</a>
-        <a href="#opportunity">Возможность</a>
-        <a href="#beyneplay">Что такое BeynePlay</a>
-        <a href="#ecosystem">Как работает экосистема</a>
+        <a href="#beyneplay">Что такое</a>
         <a href="#partners">Партнёрам</a>
-        <a href="#team">Команда</a>
         <a href="#faq">FAQ</a>
       </nav>
       <a class="header-cta" href="#contact">Связаться с нами</a>
@@ -44,14 +69,9 @@
     <div class="mobile-menu" id="mobile-menu" hidden data-mobile-menu>
       <nav aria-label="Мобильная навигация">
         <a href="#about">О проекте</a>
-        <a href="#why-now">Почему сейчас</a>
-        <a href="#opportunity">Возможность</a>
-        <a href="#beyneplay">Что такое BeynePlay</a>
-        <a href="#ecosystem">Как работает экосистема</a>
+        <a href="#beyneplay">Что такое</a>
         <a href="#partners">Партнёрам</a>
-        <a href="#team">Команда</a>
         <a href="#faq">FAQ</a>
-        <a href="#contact">Контакты</a>
         <a class="mobile-menu__cta" href="#contact">Связаться с нами</a>
       </nav>
     </div>
@@ -189,7 +209,7 @@
 
     <footer class="footer container">
       <a class="brand" href="#top" aria-label="BeynePlay, к началу страницы">
-        <img src="/public/assets/beyneplay-logo.png" width="196" height="51" alt="BeynePlay" loading="lazy" />
+        <img src="/public/assets/beyneplay-logo.svg" width="196" height="84" alt="BeynePlay" loading="lazy" />
       </a>
       <nav aria-label="Навигация в футере">
         <a href="#about">О проекте</a>
@@ -245,6 +265,12 @@
         </div>
       </div>
     </div>
+
+    <button class="scroll-top" type="button" data-scroll-top hidden aria-label="Наверх">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 5v14M6 11l6-6 6 6" />
+      </svg>
+    </button>
 
     <script type="module" src="/src/main.js"></script>
   </body>

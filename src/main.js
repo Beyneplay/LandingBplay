@@ -84,7 +84,6 @@ function renderFeatureCards(selector, items, variant = "") {
   root.innerHTML = items.map((item) => `
     <article class="feature-card ${variant}">
       ${item.icon ? iconBox(item.icon) : ""}
-      ${item.number ? `<span class="feature-card__number">${item.number}</span>` : ""}
       <h3>${item.title}</h3>
       <p>${renderCopy(item)}</p>
     </article>
@@ -97,7 +96,6 @@ function renderStructuredCards(selector, items) {
     <article class="feature-card">
       <div class="feature-card__head">
         ${iconBox(item.icon)}
-        <span class="feature-card__number">${item.number}</span>
       </div>
       <div class="feature-card__line" aria-hidden="true"></div>
       <h3>${item.title}</h3>
@@ -342,6 +340,11 @@ function setupCallbackModal() {
       form.hidden = false;
       success.hidden = true;
       form.reset();
+      const errorNode = form.querySelector("[data-callback-error]");
+      if (errorNode) {
+        errorNode.hidden = true;
+        errorNode.textContent = "";
+      }
       form.querySelector("input")?.focus();
       video?.play?.().catch(() => {});
       return;
@@ -360,15 +363,67 @@ function setupCallbackModal() {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !modal.hidden) setOpen(false);
   });
-  form.addEventListener("submit", (event) => {
+  const submitButton = form.querySelector('button[type="submit"]');
+  let errorNode = form.querySelector("[data-callback-error]");
+  if (!errorNode) {
+    errorNode = document.createElement("p");
+    errorNode.className = "callback-form__error";
+    errorNode.hidden = true;
+    errorNode.setAttribute("data-callback-error", "");
+    errorNode.setAttribute("role", "alert");
+    submitButton?.before(errorNode);
+  }
+
+  const setError = (message) => {
+    if (!message) {
+      errorNode.hidden = true;
+      errorNode.textContent = "";
+      return;
+    }
+    errorNode.hidden = false;
+    errorNode.textContent = message;
+  };
+
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const payload = Object.fromEntries(new FormData(form).entries());
-    window.dispatchEvent(new CustomEvent("landing:analytics", {
-      detail: { event: "callback_submit", login: payload.login }
-    }));
-    form.hidden = true;
-    success.hidden = false;
-    success.querySelector("button")?.focus();
+    setError("");
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Отправка…";
+    }
+
+    try {
+      const response = await fetch("/api/callback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "Не удалось отправить заявку. Попробуйте ещё раз.");
+      }
+
+      window.dispatchEvent(new CustomEvent("landing:analytics", {
+        detail: { event: "callback_submit", login: payload.login }
+      }));
+      form.hidden = true;
+      success.hidden = false;
+      const successText = success.querySelector("p");
+      if (successText) {
+        successText.textContent = data.email_sent
+          ? "Мы получили ваши данные и свяжемся с вами."
+          : "Заявка сохранена на сайте, но письмо на почту не ушло. Проверьте SMTP-пароль PrivateEmail.";
+      }
+      success.querySelector("button")?.focus();
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Не удалось отправить заявку.");
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Отправить";
+      }
+    }
   });
 }
 
@@ -395,6 +450,24 @@ function render() {
   normalizeContactLinks();
 }
 
+function setupScrollTop() {
+  const button = document.querySelector("[data-scroll-top]");
+  if (!button) return;
+
+  const update = () => {
+    const show = window.scrollY > 480;
+    button.hidden = !show;
+  };
+
+  button.addEventListener("click", () => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  });
+
+  update();
+  window.addEventListener("scroll", update, { passive: true });
+}
+
 render();
 setupIntro();
 setupFaq();
@@ -404,3 +477,4 @@ setupReveal();
 setupHeroParallax();
 setupDisabledContacts();
 setupCallbackModal();
+setupScrollTop();
