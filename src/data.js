@@ -91,7 +91,7 @@ export const benefits = [
 ];
 
 export const team = [
-  { name: "Индира Абеева", role: "Founder & CTO", detail: "", image: "/public/assets/team-indira.png" },
+  { name: "Индира Әбеева", role: "Founder & CTO", detail: "", image: "/public/assets/team-indira.png" },
   { name: "Артём Костин", role: "CPO & CDO", detail: "", image: "/public/assets/team-artem.png" },
   { name: "Arai Kussainova", role: "Co-founder Beyne Studio & CCO", detail: "", image: "/public/assets/team-arai.png" }
 ];

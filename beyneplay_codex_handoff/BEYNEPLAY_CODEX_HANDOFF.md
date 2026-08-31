@@ -1042,7 +1042,7 @@ Reference: `assets/screens/07-team.png`
 
 Три ключевые роли:
 
-- Индира Абеева — Founder
+- Индира Әбеева — Founder
 - Артём Костин — Co-founder / Product Lead · продукт, дизайн и аналитика
 - Arai Kussainova — Co-Founder & Creative Director (BeynePlay Studio)
 
@@ -1361,7 +1361,7 @@ Contact:
 7. Tap targets минимум 44x44px.
 8. Не полагаться только на accent color для понимания active state.
 9. Decorative images `alt=""`.
-10. Team portraits — meaningful alt, например `Индира Абеева`.
+10. Team portraits — meaningful alt, например `Индира Әбеева`.
 11. Text не запекать в raster visual.
 12. External link icon не заменяет текстовую подпись.
 13. Contrast body text не опускать ниже примерно `#8a8f98` на `#08090a` для длинных текстов; мелкие secondary labels могут быть темнее, но не ключевой content.
