@@ -189,11 +189,12 @@ button {
 .brand {
   display: inline-flex;
   align-items: center;
-  width: 196px;
+  width: min(220px, 42vw);
 }
 
 .brand img {
-  width: 196px;
+  width: 100%;
+  max-width: 220px;
   height: auto;
 }
 
